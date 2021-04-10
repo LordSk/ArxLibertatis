@@ -210,6 +210,29 @@ ArxGame::ArxGame()
 ArxGame::~ArxGame() {
 }
 
+#include <openvr.h>
+bool initOpenVR()
+{
+	if(vr::VR_IsHmdPresent()) {
+		LogInfo << "[OpenVR] HMD was successfully found in the system";
+		
+		if (vr::VR_IsRuntimeInstalled()) {
+			char runtimePath[512];
+			vr::VR_GetRuntimePath(runtimePath, sizeof(runtimePath), nullptr);
+			LogInfo << "[OpenVR] Runtime correctly installed at '" << runtimePath << "'";
+		}
+		else {
+			LogInfo << "[OpenVR] Runtime was not found";
+			return false;
+		}
+
+		return true;
+	}
+
+	LogInfo << "[OpenVR] No HMD was found in the system";
+	return false;
+}
+
 bool ArxGame::initialize()
 {
 	bool init;
@@ -217,6 +240,11 @@ bool ArxGame::initialize()
 	init = initConfig();
 	if(!init) {
 		LogCritical << "Failed to initialize the config subsystem";
+		return false;
+	}
+
+	init = initOpenVR();
+	if(!init) {
 		return false;
 	}
 	

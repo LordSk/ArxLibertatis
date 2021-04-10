@@ -549,6 +549,18 @@ find_package(GLM 0.9.5.0 REQUIRED)
 include_directories(SYSTEM ${GLM_INCLUDE_DIRS})
 add_definitions(-DGLM_FORCE_RADIANS) # Only needed for older GLM versions
 
+# OpenVR API path
+find_library(OPENVR_LIB
+	NAMES
+    	openvr_api
+)
+find_path(OPENVR_INCLUDE_DIR
+	NAMES
+		openvr.h
+)
+include_directories(SYSTEM ${OPENVR_INCLUDE_DIR})
+list(APPEND ARX_LIBRARIES ${OPENVR_LIB})
+
 # DbgHelp
 if(MSVC AND BUILD_CRASHHANDLER)
 	find_package(DbgHelp ${OPTIONAL_DEPENDENCY})
